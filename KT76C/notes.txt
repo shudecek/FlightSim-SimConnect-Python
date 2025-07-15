@@ -1,0 +1,106 @@
+
+
+
+7,RS_ON,0;
+
+7,RS_ON,1;
+
+7,RS_ALT,0;
+
+7,0,0; -- 0 key pressed
+7,4,0; -- 4 key pressed
+
+7="button"
+
+RS_ON = name of button
+
+            PRESS = 0,
+            RELEASE = 1,
+            LONG_RELEASE = 2,
+            HOLD = 3
+
+
+
+        NotSet,              // 0 
+        Button,              // 1
+        EncoderSingleDetent, // 2 (retained for backwards compatibility, use Encoder for new configs)
+        Output,              // 3
+        LedModuleDeprecated, // 4
+        StepperDeprecatedV1, // 5
+        Servo,               // 6
+        LcdDisplay,          // 7
+        Encoder,             // 8
+        StepperDeprecatedV2, // 9
+        ShiftRegister,       // 10
+        AnalogInput,         // 11
+        InputShiftRegister,  // 12
+        MultiplexerDriver,   // 13  Not a proper device, but index required for update events
+        InputMultiplexer, 	 // 14
+        Stepper,             // 15
+        LedModule,           // 16
+        CustomDevice         // 17       
+
+            InitModule,             // 0
+            SetModule,              // 1
+            SetPin,                 // 2
+            SetStepper,             // 3
+            SetServo,               // 4
+            Status,                 // 5
+            EncoderChange,          // 6
+            ButtonChange,           // 7
+            StepperChange,          // 8
+            GetInfo,                // 9
+            Info,                   // 10
+            SetConfig,              // 11
+            GetConfig,              // 12
+            ResetConfig,            // 13
+            SaveConfig,             // 14
+            ConfigSaved,            // 15
+            ActivateConfig,         // 16
+            ConfigActivated,        // 17
+            SetPowerSavingMode,     // 18
+            SetName,                // 19
+            GenNewSerial,           // 20
+            ResetStepper,           // 21
+            SetZeroStepper,         // 22
+            Retrigger,              // 23
+            ResetBoard,             // 24
+            SetLcdDisplayI2C,       // 25
+            SetModuleBrightness,    // 26
+            SetShiftRegisterPins,   // 27
+            AnalogChange,           // 28
+            InputShiftRegisterChange, // 29
+            InputMultiplexerChange, // 30
+            SetStepperSpeedAccel,   // 31
+            SetCustomDevice,        // 32
+            DebugPrint = 0xFF         // 255 for Debug Print from Firmware to log/terminal
+
+
+Display 
+1  -- command id
+0   -- module number
+0   -- sub module
+"002 1234"  -- value
+16    -- point - bit value of dots to light up
+255   -- mask
+
+1,0,0,002 3456,16,255;   += "\r\n"
+
+"002 1234" - alt
+" on 1234" - on
+"-88 8888" - test
+"564 1234" - standby
+decimal is 4 from right
+ident light stay solid instead of blinking (500ms+500ms)
+
+
+brightness = 26
+
+handshake
+17,OK; -- Arduino send
+18,1; -- ack
+
+command 10 -- lists buttons
+10,1.10.IDT:1.11.0:1.12.1:1.44.2:1.45.3:1.46.4:1.47.5:1.48.6:1.49.7:1.50.CLR:1.51.VFR:1.52.RS_OFF:1.53.RS_SBY:1.34.RS_TST:1.35.RS_ON:1.36.RS_ALT:16.0.37.38.39.15.1.KT-76:;
+
+10,MobiFlight Mega,Transponder,SN-935-AAE,2.5.1,2.5.1;
