@@ -11,13 +11,14 @@ class SerialMgr:
     comPorts = {}
     ignorePorts = ['COM5']
     ser = None
+    keepRunning = True
 
     def __init__(self):
          # Create a thread-safe queue
         self.read_queue = queue.Queue()
         self.write_queue = queue.Queue()
         self._start_serial()
-
+        
     def ConnectSerial(self):
         self.ports = list(port_list.comports())
         for p in self.ports:
@@ -43,7 +44,7 @@ class SerialMgr:
 
     def _read_from_serial(self):
         """Reads data from the serial port and puts it into the queue."""
-        while True:
+        while self.keepRunning:
             if not self.IsConnected():
                 sleep(1)
             else:
@@ -56,19 +57,9 @@ class SerialMgr:
                     print(e)
                     self.CloseSerial()
 
-
-    def _process_queue(self):
-        """Processes data from the queue."""
-        while True:
-            if not self.serial_queue.empty():
-                data = self.serial_queue.get()  # Retrieve data from the queue
-                #print(f"Processing: {data}")
-                # Add your processing logic here
-                self.read_queue.task_done()
-
     def _serial_writer(self):
         """Thread function to write data from the queue to the serial port."""
-        while True:
+        while self.keepRunning:
             if not self.IsConnected():
                 sleep(1)
             else:
@@ -111,6 +102,7 @@ class SerialMgr:
     def CloseSerial(self):
         if self.ser:
             self.ser.close()
+        keepRunning = False
 
 # Keep the main thread alive
 #try:

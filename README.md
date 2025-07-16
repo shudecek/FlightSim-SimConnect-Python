@@ -41,4 +41,4 @@ Tested using FS2024 using a Piper Warrior
 
 ### Issues i've noticed
  - pressing Ident the second time doesn't toggle, not sure if this is an issue with FS or my aircraft
- - sometimes the display has a glitch where only 1 segment is displayed, i think this might be because i'm writing serial data faster that the arduino can handle.  Possible mitigated with added delays on write
+ - sometimes the display has a glitch where only 1 segment is displayed, i think this might be because i'm writing serial data faster than the arduino can handle.  Possible mitigated with added delays on write
