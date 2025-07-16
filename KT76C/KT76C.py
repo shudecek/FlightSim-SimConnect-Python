@@ -181,6 +181,16 @@ def updateCodeFromPending():
         display(' ',0,16)
     number_entry.clear()
 
+def changeMode(newMode):
+    global mode
+    global codeEntryPending
+
+    codeEntryPending = False
+    number_entry.clear()
+
+    fs.ModeSet(newMode)
+    mode = newMode
+    updateDisplayMode()
 
 def saveConfig():
     with open(CONFIG_FILENAME, 'w') as configfile:
@@ -271,25 +281,15 @@ try:
                                     updateCodeFromPending()
                                     fs.IdentToggle()
                                 case "7,RS_ALT,0;": # alt mode
-                                    fs.ModeSet(4)
-                                    mode = 4
-                                    updateDisplayMode()
+                                    changeMode(4)
                                 case "7,RS_ON,0;":  # on mode
-                                    fs.ModeSet(3)
-                                    mode = 3
-                                    updateDisplayMode()
+                                    changeMode(3)
                                 case "7,RS_OFF,0;": # off mode
-                                    fs.ModeSet(0)
-                                    mode = 0
-                                    updateDisplayMode()
+                                    changeMode(0)
                                 case "7,RS_TST,0;": # test mode
-                                    fs.ModeSet(2)
-                                    mode = 2
-                                    updateDisplayMode()
+                                    changeMode(2)
                                 case "7,RS_SBY,0;": # standby mode
-                                    fs.ModeSet(1)
-                                    mode = 1
-                                    updateDisplayMode()
+                                    changeMode(1)
             if codeEntryPending and time() > lastEntry + 3.5:
                 updateCodeFromPending()
             if ident == False:
