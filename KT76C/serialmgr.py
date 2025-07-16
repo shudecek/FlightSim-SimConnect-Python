@@ -53,6 +53,7 @@ class SerialMgr:
                         data = self.ser.readline().decode('utf-8').strip()
                         self.read_queue.put(data)  # Add data to the queue
                         #print(f"Received: {data}")
+                    sleep(0.01)
                 except Exception as e:
                     print(e)
                     self.CloseSerial()
