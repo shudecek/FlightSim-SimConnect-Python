@@ -93,7 +93,6 @@ def clearNumberKey():
 def codeEntryFinish():
     global codeEntryPending
     global lastEntry
-    displayNumberEntry()
     if codeEntryPending == False:
         display(' ',0,16)
     codeEntryPending = True
@@ -140,9 +139,14 @@ def updateDisplayMode():
 def timeBasedIndicatorOn(pct):
     dec, _ = math.modf(time())
     if dec <= pct:
-        display(' ',16,16)
+        if timeBasedIndicatorOn.isOn == False:
+            display(' ',16,16)
+        timeBasedIndicatorOn.isOn = True
     else:
-        display(' ',0,16)
+        if timeBasedIndicatorOn.isOn == True:
+            display(' ',0,16)
+        timeBasedIndicatorOn.isOn = False
+timeBasedIndicatorOn.isOn = False
 
 
 def updateReplyIndicator():
@@ -158,6 +162,7 @@ def pushCode(code:int):
     s = str(int(code)).rjust(4, '0')
     for c in s:
         pushNumberKey(c)
+    displayNumberEntry()
 
 
 def updateCodeFromPending():
@@ -243,6 +248,7 @@ try:
                         if key in ('0','1','2','3','4','5','6','7')  and msg_items[2] == '1' and msg_items[0] == '7':  # button released
                             if isEntryMode():
                                 pushNumberKey(key)
+                                displayNumberEntry()
                             elif mode == 2: # tst mode
                                 match key:
                                     case '0':
@@ -256,6 +262,7 @@ try:
                                 case "7,CLR,1;":    # CLR
                                     if isEntryMode():
                                         clearNumberKey()
+                                        displayNumberEntry()
                                 case "7,VFR,0;":    # VFR (press)
                                     if mode in (3,4):
                                         lastVfrPressed = time()
