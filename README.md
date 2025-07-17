@@ -7,6 +7,9 @@ https://github.com/Koseng/MSFSPythonSimConnectMobiFlightExtension
 ### Captain Bob's Transponder:
 https://www.youtube.com/watch?v=-2wvzZ1n_w0&t=1s
 
+### Feature Demo
+https://youtu.be/5hL7WlavQHw
+
 ### KT6C Manual:
 https://vac.flights/index_htm_files/KT-76C_IM.pdf
 
@@ -36,9 +39,9 @@ I tried to implement everything in the manual, given the limitations of the 8 di
 - you can set the VRF code, just like in the manual.  (this is persisted to config.ini file for next startup)
 
 
-Tested using FS2024 using a Piper Warrior
+Tested using FS2024 using Carenado PA28 181 Archer II
 
 
 ### Issues i've noticed
- - pressing Ident the second time doesn't toggle, not sure if this is an issue with FS or my aircraft
- - sometimes the display has a glitch where only 1 segment is displayed, i think this might be because i'm writing serial data faster than the arduino can handle.  Possible mitigated with added delays on write
+ - pressing Ident is supposed to toggle ident, ie turn of off the second time.  it appears to stay on, not sure if this is an issue with FS or my aircraft
+ - turning off power save doesn't appear to work, the display turns off after a while
