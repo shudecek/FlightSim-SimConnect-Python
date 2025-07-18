@@ -58,6 +58,13 @@ class FlightSim_Xpndr:
         else:
             return 0
 
+    def AvionicsMasterSwitchGet(self) -> int:
+        if self.IsAvailible():
+            master_switch = self.vr.get("(A:AVIONICS MASTER SWITCH:1,number)") # 
+            return int(master_switch)
+        else:
+            return 0
+
     def CodeSet(self, n3, n2, n1, n0):
         if self.IsAvailible():
             bcdCode = str((n3<<12) + (n2<<8) + (n1<<4) + n0)

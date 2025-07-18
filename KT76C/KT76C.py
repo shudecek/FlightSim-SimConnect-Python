@@ -23,6 +23,7 @@ code = 5000
 brightness = 10
 lastNonVfrCode = 5000
 ident = False
+avionicsMaster = 1
 knownTransponder = False
 codeEntryPending = False
 lastEntry = time()
@@ -36,6 +37,12 @@ vfrButtonState = ButtonState.Undefined
 config = configparser.ConfigParser()
 config.read(CONFIG_FILENAME)
 vfrCode = int(config[CONFIG_SETTINGS][CONFIG_VFRCODE])
+
+def powerGet() -> int: # 1 = we have power
+    if mode == 0 or avionicsMaster == 0:
+        return 0
+    else:
+        return 1
 
 def decreaseBrightness():
     global brightness
@@ -112,6 +119,9 @@ def displayNumberEntry():
 def displayCode(c):
     s = str(int(c)).rjust(4, '0')
     display(s, 0, 15)
+
+def displayOff():
+    display('        ', 0, 255)
 
 def updateDisplayMode():
     if mode == 0:
@@ -245,7 +255,7 @@ try:
                             if key in ('0','1','2','3','4','5','6','7') and key != lastKeyPressed:
                                 continue # filter release without a press right before
 
-                        if key in ('0','1','2','3','4','5','6','7')  and msg_items[2] == '1' and msg_items[0] == '7':  # button released
+                        if key in ('0','1','2','3','4','5','6','7') and msg_items[2] == '1' and msg_items[0] == '7':  # button released
                             if isEntryMode():
                                 pushNumberKey(key)
                                 displayNumberEntry()
@@ -297,24 +307,29 @@ try:
                                     changeMode(2)
                                 case "7,RS_SBY,0;": # standby mode
                                     changeMode(1)
-            if codeEntryPending and time() > lastEntry + 3.5:
-                updateCodeFromPending()
-            if ident == False:
-                updateReplyIndicator()
-            if vfrButtonState == ButtonState.Pressed and time() > lastVfrPressed + 2.0 and code == vfrCode:
-                vfrButtonState = ButtonState.Holding
-                pushCode(lastNonVfrCode)
+            if powerGet() == 1:
+                if codeEntryPending and time() > lastEntry + 3.5:
+                    updateCodeFromPending()
+                if ident == False:
+                    updateReplyIndicator()
+                if vfrButtonState == ButtonState.Pressed and time() > lastVfrPressed + 2.0 and code == vfrCode:
+                    vfrButtonState = ButtonState.Holding
+                    pushCode(lastNonVfrCode)
         if fs.IsConnected():
             if time() > lastSimRead + 1.0:
                 lastSimRead = time()
                 alt = fs.AltitudeGet()
                 code = fs.CodeGet()
                 ident = fs.IdentGet()
-                if codeEntryPending == False:
-                    updateDisplayMode()
+                avionicsMaster = fs.AvionicsMasterSwitchGet()
+                if powerGet() == 0:
+                    displayOff()
+                else:
+                    if codeEntryPending == False:
+                        updateDisplayMode()
             
             # update local display
-            if ident == True:
+            if ident == True and powerGet() == 1:
                 timeBasedIndicatorOn(0.9)
 
         if not fs.IsInitialized() and not fs.IsConnected() and time() > lastSimConnectionCheck + 5.0:
