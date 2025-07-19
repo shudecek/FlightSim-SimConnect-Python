@@ -29,6 +29,7 @@ codeEntryPending = False
 lastEntry = time()
 lastSimRead = time()
 lastSimConnectionCheck = time()
+lastPowerSave = time()
 lastKeyPressed = ''
 lastVfrPressed = time()
 identButtonState = ButtonState.Undefined
@@ -237,7 +238,7 @@ try:
                         sm.WriteSerial("9;") # GetInfo
                     elif msg.startswith("10,"): #Info
                         knownTransponder = True
-                        sm.WriteSerial("18,0;") # SetPowerSavingMode = false
+                        sm.WriteSerial("18,false;") # SetPowerSavingMode = false
                         sm.WriteSerial("12;") # GetConfig
                         sm.WriteSerial("23;") # Retrigger
                         #sm.WriteSerial("5,0,0;") # Status
@@ -336,7 +337,10 @@ try:
             lastSimConnectionCheck = time()
             if (fs.Connect()):
                 fs.Initialize()
-
+            
+        if time() > lastPowerSave + 60:
+            sm.WriteSerial("18,false;")
+            lastPowerSave = time()
         sleep(0.01)
 except KeyboardInterrupt:
     print("Exiting...")
